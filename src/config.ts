@@ -59,9 +59,15 @@ let cache: Config | undefined;
 
 export const existeEnv = () => existsSync(path.join(CARPETA_PROYECTO, '.env'));
 
+/**
+ * En Docker no hay archivo .env dentro de la imagen (ahí no debe quedar la contraseña): docker compose pasa las
+ * variables con env_file. Basta con que venga PGPASSWORD en el entorno.
+ */
+const configuradoPorEntorno = () => process.env.PGPASSWORD !== undefined;
+
 export function leerConfig(): Config {
   if (cache) return cache;
-  if (!existeEnv()) {
+  if (!existeEnv() && !configuradoPorEntorno()) {
     throw new ErrorConfiguracion(
       `No existe el archivo .env en ${CARPETA_PROYECTO}.\n` +
         'Créalo copiando la plantilla (copy .env.example .env) y pon ahí tus datos de PostgreSQL.',

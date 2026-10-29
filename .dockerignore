@@ -1,0 +1,18 @@
+# Lo que no entra a la imagen: dependencias y compilados locales (se rehacen adentro), datos de trabajo,
+# credenciales y archivos de desarrollo
+node_modules
+dist
+.env
+.env.*
+!.env.example
+entrada
+procesados
+rechazados
+test
+.git
+.gitignore
+.editorconfig
+*.log
+Dockerfile
+docker-compose.yml
+.dockerignore

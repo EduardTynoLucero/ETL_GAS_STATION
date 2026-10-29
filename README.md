@@ -59,6 +59,26 @@ postgresql://gas_station_db:TU_CONTRASEÑA@72.62.80.172:5432/gas_station_db
 
 `sql/00_crear_base_de_datos.sql` solo hace falta para montar la base en otro servidor que no sea Dokploy.
 
+## Con Docker (otra forma de instalarlo)
+
+Se dockeriza solo la aplicación (panel, carga y carpeta vigilada); la base de datos sigue siendo el PostgreSQL de la nube (Dokploy). Solo hace falta Docker Desktop (o Docker en un servidor); no hace falta instalar Node.js. Se usa el mismo `.env` de esta carpeta: la contraseña no entra a la imagen, Compose la pasa al contenedor.
+
+```powershell
+docker compose up -d --build                       # panel en http://localhost:3100
+docker compose run --rm etl instalar-bd            # instala o actualiza la base (los cuatro scripts de sql/)
+docker compose run --rm etl probar-conexion
+docker compose run --rm etl cargar "entrada/DATA_TICKETS_DESPACHOS.xlsx"
+docker compose --profile vigilar up -d             # también la carpeta vigilada: carga lo que se deje en entrada/
+docker compose logs -f panel                       # ver lo que pasa
+docker compose down                                # apagar
+```
+
+- Las carpetas `entrada`, `procesados` y `rechazados` de esta carpeta se comparten con el contenedor: los archivos quedan en tu PC. Con Docker deja las rutas del `.env` relativas (`ETL_CARPETA_ENTRADA=entrada`); una ruta de Windows como `C:\...` no existe dentro del contenedor.
+- El panel solo se abre desde esta PC (`127.0.0.1`). Para abrirlo desde otras PCs de una red de confianza, cambia en `docker-compose.yml` la línea de `ports` por `"3100:3100"`. Si el 3100 ya está ocupado (por ejemplo, por `npm run panel`), usa otro: `$env:PANEL_PUERTO_HOST=3200; docker compose up -d`.
+- El contenedor usa la hora de Guatemala (`TZ=America/Guatemala`), la misma de los tickets y del nivel de los tanques.
+- Sin un nombre en el panel, las cargas quedan a nombre de `node` (el usuario del contenedor): pon `ETL_USUARIO` en el `.env` o escribe tu nombre en el panel.
+- En Dokploy se puede desplegar con este mismo `docker-compose.yml`; ahí `PGHOST` puede ser el nombre interno de la base: `expensesproject-gasstationdb-dt5gda`.
+
 ## Uso
 
 ### 1. Exportar el reporte en BISS

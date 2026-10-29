@@ -1,0 +1,58 @@
+# ETL_GAS_STATION con Docker Compose: solo la aplicación. La base de datos es el PostgreSQL que ya está
+# desplegado en la nube (Dokploy); el contenedor se conecta a él con los datos del .env.
+#
+#   docker compose up -d --build                       panel en http://localhost:3100
+#   docker compose run --rm etl instalar-bd            instala o actualiza las tablas en la base de la nube (se puede repetir)
+#   docker compose run --rm etl probar-conexion
+#   docker compose run --rm etl cargar "entrada/archivo.xlsx"
+#   docker compose --profile vigilar up -d             también la carpeta vigilada (entrada/)
+#   docker compose logs -f panel                       ver lo que pasa
+#   docker compose down                                apagar (los datos de entrada/, procesados/ y rechazados/ quedan)
+#
+# Las credenciales salen del .env de esta carpeta (el mismo de siempre: PGHOST=72.62.80.172). Si algún día el
+# contenedor corre dentro de Dokploy, PGHOST puede ser el nombre interno del servicio: expensesproject-gasstationdb-dt5gda
+
+name: etl-gas-station
+
+x-etl: &etl
+  build: .
+  image: etl-gas-station:1.3.0
+  env_file: .env
+  environment:
+    TZ: America/Guatemala
+    PANEL_PUERTO: "3100"
+    PANEL_ABRIR: "false"
+  volumes:
+    - ./entrada:/app/entrada
+    - ./procesados:/app/procesados
+    - ./rechazados:/app/rechazados
+  # tini como PID 1: Ctrl+C y docker stop llegan al proceso y cierran bien la conexión a PostgreSQL
+  init: true
+
+services:
+  panel:
+    <<: *etl
+    container_name: etl-gas-station-panel
+    ports:
+      # Solo desde esta PC: el panel no tiene usuarios ni contraseña. Para abrirlo desde otras PCs de una red
+      # de confianza, cambia la línea por "3100:3100"
+      - "127.0.0.1:${PANEL_PUERTO_HOST:-3100}:3100"
+    restart: unless-stopped
+
+  vigilar:
+    <<: *etl
+    container_name: etl-gas-station-vigilar
+    command: ["node", "dist/cli.js", "vigilar"]
+    healthcheck:
+      disable: true
+    restart: unless-stopped
+    profiles: ["vigilar"]
+
+  # Comandos sueltos: docker compose run --rm etl <comando> (instalar-bd, probar-conexion, validar, cargar)
+  etl:
+    <<: *etl
+    entrypoint: ["node", "dist/cli.js"]
+    command: ["ayuda"]
+    healthcheck:
+      disable: true
+    profiles: ["herramientas"]

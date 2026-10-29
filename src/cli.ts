@@ -101,7 +101,7 @@ async function main(): Promise<number> {
         const ruta = rutaDesdeUsuario(a);
         await stat(ruta); // si no existe, el error ENOENT da el mensaje "No encuentro el archivo"
         // validar no usa la base: si todavía no hay .env, solo se pierde la estación por defecto
-        const estacion = values.estacion ?? (existeEnv() ? leerConfig().estacionPorDefecto : undefined);
+        const estacion = values.estacion ?? (existeEnv() || process.env.PGPASSWORD !== undefined ? leerConfig().estacionPorDefecto : undefined);
         let hojas;
         try {
           hojas = await abrirExcel(ruta);
