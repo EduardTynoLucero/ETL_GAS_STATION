@@ -16,7 +16,8 @@ RUN npm run build \
  && npm prune --omit=dev
 
 # ---------- Imagen final: solo lo que se ejecuta ----------
-FROM node:22-alpine
+# Se llama "production": es la etapa que va en "Docker Build Stage" de Dokploy (o se deja vacío: es la última)
+FROM node:22-alpine AS production
 # tzdata: las fechas de los tickets son hora de Guatemala; el nivel de los tanques usa la hora del contenedor
 RUN apk add --no-cache tzdata
 ENV NODE_ENV=production \

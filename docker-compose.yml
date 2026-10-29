@@ -15,7 +15,9 @@
 name: etl-gas-station
 
 x-etl: &etl
-  build: .
+  build:
+    context: .
+    target: production
   image: etl-gas-station:1.3.0
   env_file: .env
   environment:
