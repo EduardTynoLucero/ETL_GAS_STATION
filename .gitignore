@@ -4,3 +4,8 @@ entrada/
 procesados/
 rechazados/
 *.log
+
+# Credenciales: nunca van a GitHub (en Dokploy van en la pestaña Environment)
+.env
+.env.*
+!.env.example
