@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Panel ETL Gasolinera</title>
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232a78d6'/%3E%3Cpath d='M9 24V9a2 2 0 0 1 2-2h7a2 2 0 0 1 2 2v15M8 24h13M12 12h5' stroke='white' stroke-width='2.2' fill='none' stroke-linecap='round'/%3E%3Cpath d='M20 13h2a2 2 0 0 1 2 2v5a1.5 1.5 0 0 0 3 0v-8l-3-3' stroke='white' stroke-width='2.2' fill='none' stroke-linecap='round'/%3E%3C/svg%3E" />
+    <link rel="stylesheet" href="/estilos.css" />
+    <script src="/vendor/echarts.min.js" defer></script>
+    <script type="module" src="/js/app.js"></script>
+  </head>
+  <body>
+    <header class="encabezado">
+      <div class="encabezado-marca">
+        <span class="marca-icono" aria-hidden="true"></span>
+        <div>
+          <h1>Panel del ETL</h1>
+          <p class="encabezado-sub">Tickets y compras · BISS</p>
+        </div>
+      </div>
+      <nav class="pestanas" role="tablist" aria-label="Secciones">
+        <a href="#cargar" role="tab" id="tab-cargar" aria-controls="vista-cargar">Cargar reporte</a>
+        <a href="#dashboard" role="tab" id="tab-dashboard" aria-controls="vista-dashboard">Dashboard</a>
+        <a href="#inventario" role="tab" id="tab-inventario" aria-controls="vista-inventario">Inventario</a>
+        <a href="#tomas" role="tab" id="tab-tomas" aria-controls="vista-tomas">Tomas físicas</a>
+        <a href="#historial" role="tab" id="tab-historial" aria-controls="vista-historial">Historial<span class="solo-ancho"> de cargas</span></a>
+      </nav>
+      <div class="encabezado-acciones">
+        <button type="button" class="conexion" id="conexion" aria-live="polite">
+          <span class="conexion-punto" aria-hidden="true"></span>
+          <span class="conexion-texto">Revisando conexión…</span>
+        </button>
+        <button type="button" class="boton-icono" id="tema" title="Cambiar tema" aria-label="Cambiar tema"></button>
+      </div>
+    </header>
+
+    <div class="aviso-conexion" id="aviso-conexion" hidden role="alert"></div>
+
+    <main>
+      <section id="vista-cargar" class="vista" role="tabpanel" aria-labelledby="tab-cargar" hidden></section>
+      <section id="vista-dashboard" class="vista" role="tabpanel" aria-labelledby="tab-dashboard" hidden></section>
+      <section id="vista-inventario" class="vista" role="tabpanel" aria-labelledby="tab-inventario" hidden></section>
+      <section id="vista-tomas" class="vista" role="tabpanel" aria-labelledby="tab-tomas" hidden></section>
+      <section id="vista-historial" class="vista" role="tabpanel" aria-labelledby="tab-historial" hidden></section>
+    </main>
+
+    <noscript><p class="noscript">El panel necesita JavaScript activado en el navegador.</p></noscript>
+  </body>
+</html>

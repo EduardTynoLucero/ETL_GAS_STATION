@@ -1,0 +1,7 @@
+node_modules/
+dist/
+.env
+entrada/
+procesados/
+rechazados/
+*.log

@@ -1,0 +1,12 @@
+# Todos los archivos del proyecto en UTF-8 sin BOM (VS Code, Notepad++ y la mayoría de editores leen este archivo)
+root = true
+
+[*]
+charset = utf-8
+end_of_line = crlf
+insert_final_newline = true
+indent_style = space
+indent_size = 2
+
+[*.md]
+trim_trailing_whitespace = false
